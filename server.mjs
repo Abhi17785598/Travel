@@ -31,16 +31,22 @@ const transporter = nodemailer.createTransport({
 })
 
 app.post('/api/enquiry', async (req, res) => {
-  const { name, email, phone, destination, message, source } = req.body || {}
-
-  if (!name || !email || !phone) {
-    return res.status(400).json({ error: 'Missing required fields' })
-  }
-
-  const subject = `New travel enquiry from ${name}`
-  const textBody = `New enquiry from Dakshin Trips website\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDestination: ${destination || '-'}\nSource: ${source || '-'}\n\nMessage:\n${message || '-'}\n`
-
+  console.log('Received enquiry request at:', new Date().toISOString())
+  
   try {
+    const { name, email, phone, destination, message, source } = req.body || {}
+
+    console.log('Request data:', { name, email, phone, destination, message, source })
+
+    if (!name || !email || !phone) {
+      console.log('Missing required fields')
+      return res.status(400).json({ error: 'Missing required fields' })
+    }
+
+    const subject = `New travel enquiry from ${name}`
+    const textBody = `New enquiry from Dakshin Trips website\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nDestination: ${destination || '-'}\nSource: ${source || '-'}\n\nMessage:\n${message || '-'}\n`
+
+    console.log('Sending email...')
     await transporter.sendMail({
       from: smtpUser,
       to: enquiryTo,
@@ -49,6 +55,7 @@ app.post('/api/enquiry', async (req, res) => {
       text: textBody,
     })
 
+    console.log('Email sent successfully')
     return res.status(200).json({ ok: true })
   } catch (err) {
     console.error('Error sending enquiry email', err)
