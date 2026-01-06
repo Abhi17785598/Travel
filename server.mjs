@@ -28,6 +28,9 @@ const transporter = nodemailer.createTransport({
     user: smtpUser,
     pass: smtpPass,
   },
+  connectionTimeout: 60000,
+  greetingTimeout: 30000,
+  socketTimeout: 60000,
 })
 
 app.post('/api/enquiry', async (req, res) => {
