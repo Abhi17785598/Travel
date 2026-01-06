@@ -59,3 +59,8 @@ app.post('/api/enquiry', async (req, res) => {
 app.listen(port, () => {
   console.log(`Dakshin Trips enquiry server listening on http://localhost:${port}`)
 })
+
+// Health check endpoint for Render
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
+})
